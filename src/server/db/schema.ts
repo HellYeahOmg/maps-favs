@@ -10,8 +10,10 @@ import {
   serial,
   numeric,
   pgEnum,
+  json,
 } from "drizzle-orm/pg-core";
-import { type AdapterAccount } from "next-auth/adapters";
+import { type AdapterAccount } from "@auth/core/adapters";
+import type { ClientUploadedFileData } from "uploadthing/types";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -57,6 +59,7 @@ export const reviews = createTable("review", {
   lat: numeric("lat").notNull(),
   lng: numeric("lng").notNull(),
   placeId: varchar("placeId", { length: 255 }).notNull(),
+  images: json("images").$type<string[]>(),
 });
 
 export const accounts = createTable(

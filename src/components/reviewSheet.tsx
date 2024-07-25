@@ -12,7 +12,12 @@ import { type SelectReview } from "~/server/db/schema";
 import { Skeleton } from "~/components/ui/skeleton";
 import PlaceResult = google.maps.places.PlaceResult;
 import StarReview from "~/components/ui/starReview";
-import { foodTypeToString, getIsAdmin, orderTypeToString } from "~/lib/utils";
+import {
+  foodTypeToString,
+  getIsAdmin,
+  getUrlByKey,
+  orderTypeToString,
+} from "~/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import {
   AlertDialog,
@@ -25,6 +30,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alertDialog";
+import Image from "next/image";
+import { X } from "lucide-react";
+import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
+import * as React from "react";
 
 type PropTypes = {
   showSheet: boolean;
@@ -75,6 +84,25 @@ export const ReviewSheet = ({
             <SheetHeader className={"mb-6"}>
               <SheetTitle>{placeData.name}</SheetTitle>
             </SheetHeader>
+
+            <ScrollArea className="mb-2 w-full whitespace-nowrap">
+              <div className="flex w-max space-x-4">
+                {selectedReview.images?.map((image) => (
+                  <div key={image} className="overflow-hidden">
+                    <Image
+                      src={getUrlByKey(image)}
+                      alt={``}
+                      className={"max-h-75"}
+                      width={380}
+                      height={300}
+                    />
+                  </div>
+                ))}
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+
+            <p className={"text-lg font-bold"}>Отзыв:</p>
             <p>&quot;{selectedReview.text}&quot;</p>
             <div className={"mt-4"}>
               <div className={"mb-4 flex items-center gap-2"}>

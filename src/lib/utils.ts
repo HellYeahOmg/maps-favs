@@ -36,3 +36,7 @@ export const getIsAdmin = (user?: UserResource | null) => {
 
   return user.publicMetadata.isAdmin === "true";
 };
+
+export const getUrlByKey = (key: string) => {
+  return `https://utfs.io/f/${key}`;
+};
