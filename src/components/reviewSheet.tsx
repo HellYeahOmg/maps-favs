@@ -14,6 +14,17 @@ import PlaceResult = google.maps.places.PlaceResult;
 import StarReview from "~/components/ui/starReview";
 import { foodTypeToString, getIsAdmin, orderTypeToString } from "~/lib/utils";
 import { useUser } from "@clerk/nextjs";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alertDialog";
 
 type PropTypes = {
   showSheet: boolean;
@@ -100,13 +111,23 @@ export const ReviewSheet = ({
                 <Button type="submit" onClick={handleUpdate}>
                   Обновить
                 </Button>
-                <Button
-                  variant={"destructive"}
-                  onClick={handleDeletePlace}
-                  type="submit"
-                >
-                  Удалить
-                </Button>
+
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant={"destructive"}>Удалить</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Отменить</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDeletePlace}>
+                        Продолжить
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </SheetFooter>
             )}
           </>

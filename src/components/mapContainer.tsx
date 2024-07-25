@@ -84,6 +84,7 @@ export const MapContainer = ({ reviews }: PropTypes) => {
     if (selectedReview) {
       await deleteReview(selectedReview?.id);
       setShowSheet(false);
+      setSelectedReview(null);
     }
   };
 

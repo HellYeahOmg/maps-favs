@@ -88,6 +88,8 @@ export const ReviewDialog = ({
       setAtmosphereRating(placeToEdit.atmosphereRating);
       setOrderType(placeToEdit.orderType);
       setFoodType(placeToEdit.foodType);
+    } else {
+      cleanState();
     }
   }, [placeToEdit]);
 
@@ -182,7 +184,11 @@ export const ReviewDialog = ({
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={onSave} type="submit">
+          <Button
+            disabled={reviewText.length === 0}
+            onClick={onSave}
+            type="submit"
+          >
             Сохранить
           </Button>
         </DialogFooter>
