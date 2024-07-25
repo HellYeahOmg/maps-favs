@@ -24,14 +24,12 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alertDialog";
 import Image from "next/image";
-import { X } from "lucide-react";
 import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
 import * as React from "react";
 

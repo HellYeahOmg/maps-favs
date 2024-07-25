@@ -90,9 +90,9 @@ export const ReviewDialog = ({
     onOpenChange(flag);
   };
 
-  const handleImageDelete = (key: string) => {
+  const handleImageDelete = async (key: string) => {
+    await deleteFile([key]);
     setImages((prev) => prev.filter((i) => i !== key));
-    deleteFile([key]);
   };
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export const ReviewDialog = ({
       setAtmosphereRating(placeToEdit.atmosphereRating);
       setOrderType(placeToEdit.orderType);
       setFoodType(placeToEdit.foodType);
-      setImages(placeToEdit.images || []);
+      setImages(placeToEdit.images ?? []);
     } else {
       cleanState();
     }
