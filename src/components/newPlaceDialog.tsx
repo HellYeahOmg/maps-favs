@@ -10,14 +10,14 @@ import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { useEffect, useState } from "react";
 import StarReview from "~/components/ui/starReview";
-import { type StoredMarker } from "~/types";
+import type { SelectReview } from "~/server/db/schema";
 
 type PropTypes = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   handleNewPlace: (text: string, rating: number) => void;
-  placeToEdit?: StoredMarker | null;
-  handleEditPlace: (item: StoredMarker) => void;
+  placeToEdit?: SelectReview | null;
+  handleEditPlace: (item: SelectReview) => void;
 };
 
 export const NewPlaceDialog = ({
@@ -32,14 +32,14 @@ export const NewPlaceDialog = ({
 
   const onSave = () => {
     placeToEdit
-      ? handleEditPlace({ ...placeToEdit, review: reviewText, rating })
+      ? handleEditPlace({ ...placeToEdit, text: reviewText, rating })
       : handleNewPlace(reviewText, rating);
     setReviewText("");
   };
 
   useEffect(() => {
     if (placeToEdit) {
-      setReviewText(placeToEdit.review);
+      setReviewText(placeToEdit.text);
       setRating(placeToEdit.rating);
     }
   }, [placeToEdit]);

@@ -7,14 +7,14 @@ import {
   useMapsLibrary,
 } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useState } from "react";
-import { type StoredMarker } from "~/types";
 import StarReview from "~/components/ui/starReview";
 import { Button } from "~/components/ui/button";
+import type { SelectReview } from "~/server/db/schema";
 
 export type Props = {
-  item: StoredMarker;
-  handleEdit: (item: StoredMarker) => void;
-  handleDelete: (placeId: string) => void;
+  item: SelectReview;
+  handleEdit: (item: SelectReview) => void;
+  handleDelete: (reviewId: number) => void;
 };
 
 export const MarkerWithInfoWindow = ({
@@ -25,7 +25,6 @@ export const MarkerWithInfoWindow = ({
   const [markerRef, marker] = useAdvancedMarkerRef();
   const [infoWindowShown, setInfoWindowShown] = useState(false);
   const [title, setTitle] = useState("");
-
   const map = useMap();
   const placesLib = useMapsLibrary("places");
 
@@ -62,7 +61,7 @@ export const MarkerWithInfoWindow = ({
     <>
       <AdvancedMarker
         ref={markerRef}
-        position={{ lng: item.lng, lat: item.lat }}
+        position={{ lng: +item.lng, lat: +item.lat }}
         onClick={handleMarkerClick}
       >
         <Pin
@@ -76,7 +75,7 @@ export const MarkerWithInfoWindow = ({
       {infoWindowShown && (
         <InfoWindow minWidth={200} anchor={marker} onClose={handleClose}>
           <p className={"bold mb-2 text-2xl"}>{title}</p>
-          <p className={"mb-2"}>&quot;{item.review}&quot;</p>
+          <p className={"mb-2"}>&quot;{item.text}&quot;</p>
           <div className={"mb-4 flex items-center gap-2"}>
             Rating: <StarReview disabled rating={item.rating} />
           </div>
@@ -88,7 +87,7 @@ export const MarkerWithInfoWindow = ({
             <Button
               variant={"destructive"}
               size={"sm"}
-              onClick={() => handleDelete(item.placeId)}
+              onClick={() => handleDelete(item.id)}
             >
               Delete
             </Button>

@@ -4,14 +4,14 @@ import {
   Map as GoogleMap,
   type MapMouseEvent,
 } from "@vis.gl/react-google-maps";
-import type { StoredMarker } from "~/types";
 import { env } from "~/env";
+import { type SelectReview } from "~/server/db/schema";
 
 type PropTypes = {
-  markers: StoredMarker[];
+  markers: SelectReview[];
   onClick: (e: MapMouseEvent) => void;
-  handleDelete: (placeId: string) => void;
-  handleEdit: (item: StoredMarker) => void;
+  handleDelete: (reviewId: number) => void;
+  handleEdit: (item: SelectReview) => void;
 };
 
 export const Map = ({

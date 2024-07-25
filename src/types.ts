@@ -3,8 +3,3 @@ export type NewPlaceData = {
   lng: number;
   placeId: string;
 };
-
-export type StoredMarker = NewPlaceData & {
-  review: string;
-  rating: number;
-};
