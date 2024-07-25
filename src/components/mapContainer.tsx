@@ -9,12 +9,15 @@ import { ReviewDialog } from "~/components/reviewDialog";
 import { type SelectReview } from "~/server/db/schema";
 import { addReview, deleteReview, updateReview } from "~/server/queries";
 import { ReviewSheet } from "~/components/reviewSheet";
+import { useUser } from "@clerk/nextjs";
+import { isAdmin } from "~/lib/utils";
 
 type PropTypes = {
   reviews: SelectReview[];
 };
 
 export const MapContainer = ({ reviews }: PropTypes) => {
+  const { user } = useUser();
   const [placeToSave, setPlaceToSave] = useState<NewPlaceData | null>(null);
   const [selectedReview, setSelectedReview] = useState<SelectReview | null>(
     null,
@@ -24,6 +27,10 @@ export const MapContainer = ({ reviews }: PropTypes) => {
 
   const handleClick = (e: MapMouseEvent) => {
     e.stop();
+
+    if (!isAdmin(user)) {
+      return;
+    }
 
     if (
       e.detail.placeId &&

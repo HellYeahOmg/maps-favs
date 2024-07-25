@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { type SelectReview } from "~/server/db/schema";
+import { type UserResource } from "@clerk/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -26,4 +27,12 @@ export const foodTypeToString = (foodType: SelectReview["foodType"]) => {
     case "dinner":
       return "Ужин";
   }
+};
+
+export const isAdmin = (user?: UserResource | null) => {
+  if (!user) {
+    return false;
+  }
+
+  return user.publicMetadata.isAdmin === "true";
 };
