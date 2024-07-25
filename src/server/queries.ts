@@ -3,7 +3,7 @@
 import { db } from "~/server/db";
 import {
   reviews,
-  type SelectInsert,
+  type InsertReview,
   type SelectReview,
 } from "~/server/db/schema";
 import { revalidatePath } from "next/cache";
@@ -21,7 +21,7 @@ export const updateReview = async (item: SelectReview) => {
   revalidatePath("/");
 };
 
-export const addReview = async (item: SelectInsert) => {
+export const addReview = async (item: InsertReview) => {
   await db.insert(reviews).values(item);
   revalidatePath("/");
 };

@@ -9,6 +9,7 @@ import {
   varchar,
   serial,
   numeric,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -19,6 +20,9 @@ import { type AdapterAccount } from "next-auth/adapters";
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `maps-list_${name}`);
+
+export const orderEnum = pgEnum("order", ["dine_in", "take_out", "delivery"]);
+export const foodEnum = pgEnum("food", ["breakfast", "lunch", "dinner"]);
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 })
@@ -39,12 +43,17 @@ export const usersRelations = relations(users, ({ many }) => ({
 }));
 
 export type SelectReview = typeof reviews.$inferSelect;
-export type SelectInsert = typeof reviews.$inferInsert;
+export type InsertReview = typeof reviews.$inferInsert;
 
 export const reviews = createTable("review", {
   id: serial("id").primaryKey(),
   text: varchar("text", { length: 255 }).notNull(),
   rating: integer("rating").notNull(),
+  foodRating: integer("foodRating").notNull(),
+  serviceRating: integer("serviceRating").notNull(),
+  atmosphereRating: integer("atmosphereRating").notNull(),
+  orderType: orderEnum("orderType").notNull(),
+  foodType: foodEnum("foodType").notNull(),
   lat: numeric("lat").notNull(),
   lng: numeric("lng").notNull(),
   placeId: varchar("placeId", { length: 255 }).notNull(),

@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import type { NewPlaceData } from "~/types";
+import type { NewPlaceData, ReviewWithoutPlace } from "~/types";
 import { APIProvider, type MapMouseEvent } from "@vis.gl/react-google-maps";
 import { env } from "~/env";
 import { Map } from "~/components/Map";
 import { NewPlaceDialog } from "~/components/newPlaceDialog";
 import { type SelectReview } from "~/server/db/schema";
 import { addReview, deleteReview, updateReview } from "~/server/queries";
+import { text } from "drizzle-orm/pg-core";
 
 type PropTypes = {
   reviews: SelectReview[];
@@ -38,22 +39,31 @@ export const MapComponent = ({ reviews }: PropTypes) => {
     }
   };
 
-  const handleNewPlace = async (text: string, rating: number) => {
+  const handleNewPlace = async (item: ReviewWithoutPlace) => {
     if (placeToSave) {
       await addReview({
         lat: String(placeToSave.lat),
         lng: String(placeToSave.lng),
         placeId: placeToSave.placeId,
-        text,
-        rating,
+        ...item,
       });
       setPlaceToSave(null);
     }
   };
 
-  const handleEditPlace = async (review: SelectReview) => {
-    await updateReview(review);
-    setPlaceToEdit(null);
+  const handleEditPlace = async (review: ReviewWithoutPlace) => {
+    if (placeToEdit) {
+      const itemToEdit: SelectReview = {
+        ...review,
+        id: placeToEdit.id,
+        lng: placeToEdit.lng,
+        lat: placeToEdit.lat,
+        placeId: placeToEdit.placeId,
+      };
+
+      await updateReview(itemToEdit);
+      setPlaceToEdit(null);
+    }
   };
 
   const onOpenChange = () => {

@@ -82,14 +82,14 @@ export const MarkerWithInfoWindow = ({
 
           <div className={"flex gap-2"}>
             <Button size={"sm"} onClick={() => handleEdit(item)}>
-              Edit
+              Обновить
             </Button>
             <Button
               variant={"destructive"}
               size={"sm"}
               onClick={() => handleDelete(item.id)}
             >
-              Delete
+              Удалить
             </Button>
           </div>
         </InfoWindow>
