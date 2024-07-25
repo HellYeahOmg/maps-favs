@@ -29,7 +29,7 @@ export const foodTypeToString = (foodType: SelectReview["foodType"]) => {
   }
 };
 
-export const isAdmin = (user?: UserResource | null) => {
+export const getIsAdmin = (user?: UserResource | null) => {
   if (!user) {
     return false;
   }

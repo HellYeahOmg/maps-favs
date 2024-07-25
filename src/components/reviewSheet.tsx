@@ -12,7 +12,8 @@ import { type SelectReview } from "~/server/db/schema";
 import { Skeleton } from "~/components/ui/skeleton";
 import PlaceResult = google.maps.places.PlaceResult;
 import StarReview from "~/components/ui/starReview";
-import { foodTypeToString, orderTypeToString } from "~/lib/utils";
+import { foodTypeToString, getIsAdmin, orderTypeToString } from "~/lib/utils";
+import { useUser } from "@clerk/nextjs";
 
 type PropTypes = {
   showSheet: boolean;
@@ -32,6 +33,8 @@ export const ReviewSheet = ({
   const [placeData, setPlaceData] = useState<PlaceResult | null>(null);
   const map = useMap();
   const placesLib = useMapsLibrary("places");
+  const { user } = useUser();
+  const isAdmin = getIsAdmin(user);
 
   useEffect(() => {
     if (!placesLib || !map || !selectedReview) return;
@@ -92,18 +95,20 @@ export const ReviewSheet = ({
                 </p>
               </div>
             </div>
-            <SheetFooter className={"mt-6"}>
-              <Button type="submit" onClick={handleUpdate}>
-                Обновить
-              </Button>
-              <Button
-                variant={"destructive"}
-                onClick={handleDeletePlace}
-                type="submit"
-              >
-                Удалить
-              </Button>
-            </SheetFooter>
+            {isAdmin && (
+              <SheetFooter className={"mt-6"}>
+                <Button type="submit" onClick={handleUpdate}>
+                  Обновить
+                </Button>
+                <Button
+                  variant={"destructive"}
+                  onClick={handleDeletePlace}
+                  type="submit"
+                >
+                  Удалить
+                </Button>
+              </SheetFooter>
+            )}
           </>
         ) : (
           <div className="mt-6 space-y-2">

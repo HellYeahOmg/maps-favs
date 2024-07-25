@@ -1,14 +1,9 @@
 import "~/styles/globals.css";
 
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 
 import { type Metadata } from "next";
+import { Navbar } from "~/components/navbar";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -23,12 +18,8 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          <Navbar />
+
           {children}
         </body>
       </html>

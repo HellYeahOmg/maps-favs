@@ -10,7 +10,7 @@ import { type SelectReview } from "~/server/db/schema";
 import { addReview, deleteReview, updateReview } from "~/server/queries";
 import { ReviewSheet } from "~/components/reviewSheet";
 import { useUser } from "@clerk/nextjs";
-import { isAdmin } from "~/lib/utils";
+import { getIsAdmin } from "~/lib/utils";
 
 type PropTypes = {
   reviews: SelectReview[];
@@ -28,7 +28,7 @@ export const MapContainer = ({ reviews }: PropTypes) => {
   const handleClick = (e: MapMouseEvent) => {
     e.stop();
 
-    if (!isAdmin(user)) {
+    if (!getIsAdmin(user)) {
       return;
     }
 
