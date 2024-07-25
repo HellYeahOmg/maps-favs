@@ -9,7 +9,6 @@ import { type Adapter } from "next-auth/adapters";
 import { db } from "~/server/db";
 import {
   accounts,
-  reviews,
   sessions,
   users,
   verificationTokens,
