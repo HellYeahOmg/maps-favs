@@ -1,37 +1,109 @@
-import Link from "next/link";
+"use client";
+
+import { APIProvider, type MapMouseEvent } from "@vis.gl/react-google-maps";
+import { useEffect, useState } from "react";
+
+import { NewPlaceDialog } from "~/components/newPlaceDialog";
+import { Map } from "~/components/Map";
+import { type NewPlaceData, type StoredMarker } from "~/types";
+import { env } from "~/env";
 
 export default function HomePage() {
+  const [placeToSave, setPlaceToSave] = useState<NewPlaceData | null>(null);
+  const [placeToEdit, setPlaceToEdit] = useState<StoredMarker | null>(null);
+  const [markers, setMarkers] = useState<StoredMarker[]>([]);
+
+  useEffect(() => {
+    const savedMarkets = localStorage.getItem("markers");
+
+    if (savedMarkets) {
+      setMarkers(JSON.parse(savedMarkets) as StoredMarker[]);
+    }
+  }, []);
+
+  const handleClick = (e: MapMouseEvent) => {
+    e.stop();
+
+    if (
+      e.detail.placeId &&
+      markers.some((m) => m.placeId === e.detail.placeId)
+    ) {
+      return;
+    }
+
+    if (e.detail.placeId && e.detail.latLng) {
+      const newMarker: NewPlaceData = {
+        lat: e.detail.latLng.lat,
+        lng: e.detail.latLng.lng,
+        placeId: e.detail.placeId,
+      };
+
+      setPlaceToSave(newMarker);
+    }
+  };
+
+  const handleNewPlace = (review: string, rating: number) => {
+    if (placeToSave) {
+      const newMarker: StoredMarker = {
+        ...placeToSave,
+        review,
+        rating,
+      };
+
+      setMarkers((prevState) => {
+        const newData = [...prevState, newMarker];
+        localStorage.setItem("markers", JSON.stringify(newData));
+        return newData;
+      });
+
+      setPlaceToSave(null);
+    }
+  };
+
+  const handleEditPlace = (place: StoredMarker) => {
+    const index = markers.findIndex((m) => m.placeId === place.placeId);
+
+    if (index !== -1) {
+      const newMarkers = [...markers];
+      newMarkers[index] = place;
+      setMarkers(newMarkers);
+      localStorage.setItem("markers", JSON.stringify(newMarkers));
+    }
+
+    setPlaceToEdit(null);
+  };
+
+  const onOpenChange = () => {
+    setPlaceToEdit(null);
+    setPlaceToSave(null);
+  };
+
+  const handleDeletePlace = (placeId: string) => {
+    setMarkers((prev) => {
+      const newMarkers = prev.filter((item) => item.placeId !== placeId);
+      localStorage.setItem("markers", JSON.stringify(newMarkers));
+      return newMarkers;
+    });
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
-        </div>
-      </div>
-    </main>
+    <>
+      <APIProvider apiKey={env.NEXT_PUBLIC_API_KEY}>
+        <Map
+          markers={markers}
+          onClick={handleClick}
+          handleDelete={handleDeletePlace}
+          handleEdit={handleEditPlace}
+        />
+      </APIProvider>
+
+      <NewPlaceDialog
+        open={Boolean(placeToSave ?? placeToEdit)}
+        placeToEdit={placeToEdit}
+        onOpenChange={onOpenChange}
+        handleNewPlace={handleNewPlace}
+        handleEditPlace={handleEditPlace}
+      />
+    </>
   );
 }

@@ -21,9 +21,15 @@ export const env = createEnv({
       (str) => process.env.VERCEL_URL ?? str,
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
       process.env.VERCEL ? z.string() : z.string().url()
+
     ),
-    DISCORD_CLIENT_ID: z.string(),
-    DISCORD_CLIENT_SECRET: z.string(),
+    POSTGRES_URL: z.string(),
+    POSTGRES_URL_NON_POOLING: z.string(),
+    POSTGRES_URL_NO_SSL: z.string(),
+    POSTGRES_PRISMA_URL: z.string(),
+    POSTGRES_USER: z.string(),
+    POSTGRES_DATABASE: z.string(),
+    POSTGRES_HOST: z.string(),
   },
 
   /**
@@ -33,6 +39,8 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_API_KEY: z.string(),
+    NEXT_PUBLIC_MAP_ID: z.string(),
   },
 
   /**
@@ -44,8 +52,15 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-    DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+    NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,
+    NEXT_PUBLIC_MAP_ID: process.env.NEXT_PUBLIC_MAP_ID,
+    POSTGRES_URL: process.env.POSTGRES_URL,
+    POSTGRES_URL_NON_POOLING: process.env.POSTGRES_URL_NON_POOLING,
+    POSTGRES_URL_NO_SSL: process.env.POSTGRES_URL_NO_SSL,
+    POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL,
+    POSTGRES_USER: process.env.POSTGRES_USER,
+    POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
+    POSTGRES_HOST: process.env.POSTGRES_HOST,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
