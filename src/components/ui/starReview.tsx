@@ -50,7 +50,6 @@ const StarReview: FC<StarReviewProps> = ({
         (star) => (
           <button
             key={star}
-            type="button"
             className="focus:outline-none"
             onClick={() => handleClick(star)}
             onMouseOver={() => handleMouseOver(star)}

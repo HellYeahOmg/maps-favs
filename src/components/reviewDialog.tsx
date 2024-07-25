@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { type ReviewWithoutPlace } from "~/types";
+import { foodTypeToString, orderTypeToString } from "~/lib/utils";
 
 type PropTypes = {
   open: boolean;
@@ -29,7 +30,7 @@ type PropTypes = {
   handleEditPlace: (item: ReviewWithoutPlace) => void;
 };
 
-export const NewPlaceDialog = ({
+export const ReviewDialog = ({
   open,
   onOpenChange,
   handleNewPlace,
@@ -46,6 +47,16 @@ export const NewPlaceDialog = ({
   const [foodType, setFoodType] =
     useState<SelectReview["foodType"]>("breakfast");
 
+  const cleanState = () => {
+    setReviewText("");
+    setRating(0);
+    setFoodRating(0);
+    setServiceRating(0);
+    setAtmosphereRating(0);
+    setOrderType("dine_in");
+    setFoodType("breakfast");
+  };
+
   const onSave = () => {
     const item: ReviewWithoutPlace = {
       text: reviewText,
@@ -58,7 +69,14 @@ export const NewPlaceDialog = ({
     };
 
     placeToEdit ? handleEditPlace(item) : handleNewPlace(item);
-    setReviewText("");
+    cleanState();
+  };
+
+  const handleOpenChange = (flag: boolean) => {
+    if (!flag) {
+      cleanState();
+    }
+    onOpenChange(flag);
   };
 
   useEffect(() => {
@@ -74,12 +92,14 @@ export const NewPlaceDialog = ({
   }, [placeToEdit]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Добавить отзыв</DialogTitle>
+          <DialogTitle>
+            {placeToEdit ? "Редактировать" : "Новый отзыв"}
+          </DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4 py-2">
           <Label>Отзыв</Label>
           <Textarea
             value={reviewText}
@@ -120,9 +140,15 @@ export const NewPlaceDialog = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="dine_in">На месте</SelectItem>
-                  <SelectItem value="take_out">Самовывоз</SelectItem>
-                  <SelectItem value="delivery">Доставка</SelectItem>
+                  <SelectItem value="dine_in">
+                    {orderTypeToString("dine_in")}
+                  </SelectItem>
+                  <SelectItem value="take_out">
+                    {orderTypeToString("take_out")}
+                  </SelectItem>
+                  <SelectItem value="delivery">
+                    {orderTypeToString("delivery")}
+                  </SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -141,9 +167,15 @@ export const NewPlaceDialog = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="breakfast">Завтрак</SelectItem>
-                  <SelectItem value="lunch">Обед</SelectItem>
-                  <SelectItem value="dinner">Ужин</SelectItem>
+                  <SelectItem value="breakfast">
+                    {foodTypeToString("breakfast")}
+                  </SelectItem>
+                  <SelectItem value="lunch">
+                    {foodTypeToString("lunch")}
+                  </SelectItem>
+                  <SelectItem value="dinner">
+                    {foodTypeToString("dinner")}
+                  </SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
